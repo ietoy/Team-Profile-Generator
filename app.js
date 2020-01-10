@@ -31,7 +31,7 @@ function initialPrompt() {
         var id = data.id;
         var role = data.role;
 
-        console.log("Hello " + name + "! Your Employee ID is " + id + " and you are a " + role + " for this project.")
+        // console.log("Hello " + name + "! Your Employee ID is " + id + " and you are a " + role + " for this project.")
 
         switch (role) {
             case "Manager":
