@@ -4,6 +4,7 @@ const util = require("util");
 
 
 function initialPrompt() {
+    // console.log("Welcome to the Team Profile Generator!");
     return inquirer.prompt([
         {
             type: "input",
@@ -42,13 +43,12 @@ function initialPrompt() {
                 engineerPrompt();
                 break;
             case "Intern":
-                console.log("You don't expect to get paid, right?");
+                // console.log("You don't expect to get paid, right?");
                 internPrompt();
                 break;
             default:
                 console.log("Something ain't workin'...");
         }
-
     })
 }
 
@@ -62,6 +62,7 @@ function managerPrompt() {
     ]).then(function(data) {
         var officeNum = data.office;
         // console.log(officeNum);
+        addAnother();
     })
 };
 
@@ -74,7 +75,8 @@ function engineerPrompt() {
         }
     ]).then(function(data) {
         var github = data.github;
-        console.log(github);
+        // console.log(github);
+        addAnother();
     })
 };
 
@@ -87,8 +89,36 @@ function internPrompt() {
         }
     ]).then(function(data) {
         var school = data.school;
-        console.log(school);
+        // console.log(school);
+        addAnother();
     })
 };
+
+function addAnother() {
+    return inquirer.prompt([
+        {
+            type: "confirm",
+            name:"addanother",
+            message: "Would you like to add another teammate?"
+        }
+    ]).then(function(data) {
+        var add = data.addanother;
+        // console.log(add);
+        switch (add) {
+            case true:
+                console.log("You would like to add another teammate!")
+                initialPrompt();
+                break;
+            case false:
+                console.log("All done! Lets see who's on your team...")
+                // Render pdf stuff goes here!
+                break;
+            default:
+                console.log("Something ain't workin'...");
+        }
+    })
+}
+
+
 
 initialPrompt();
