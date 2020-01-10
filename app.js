@@ -34,13 +34,16 @@ function initialPrompt() {
 
         switch (role) {
             case "Manager":
-                console.log("You're a manager, Harry!");
+                // console.log("You're a manager, Harry!");
+                managerPrompt();
                 break;
             case "Engineer":
-                console.log("I bet you can't spell");
+                // console.log("I bet you can't spell");
+                engineerPrompt();
                 break;
             case "Intern":
                 console.log("You don't expect to get paid, right?");
+                internPrompt();
                 break;
             default:
                 console.log("Something ain't workin'...");
@@ -48,5 +51,44 @@ function initialPrompt() {
 
     })
 }
+
+function managerPrompt() {
+    return inquirer.prompt([
+        {
+            type: "input",
+            name: "office",
+            message: "What is your office number?"
+        }
+    ]).then(function(data) {
+        var officeNum = data.office;
+        // console.log(officeNum);
+    })
+};
+
+function engineerPrompt() {
+    return inquirer.prompt([
+        {
+            type: "input",
+            name: "github",
+            message: "What is your GitHub username?"
+        }
+    ]).then(function(data) {
+        var github = data.github;
+        console.log(github);
+    })
+};
+
+function internPrompt() {
+    return inquirer.prompt([
+        {
+            type: "input",
+            name: "school",
+            message: "Where do you go to school?"
+        }
+    ]).then(function(data) {
+        var school = data.school;
+        console.log(school);
+    })
+};
 
 initialPrompt();
