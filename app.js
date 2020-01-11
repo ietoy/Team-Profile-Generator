@@ -2,6 +2,10 @@ const inquirer = require("inquirer");
 const fs = require("fs");
 const util = require("util");
 
+const Manager = require("./lib/Manager");
+const Engineer = require("./lib/Engineer");
+const Intern = require("./lib/Intern");
+
 var roster = [];
 
 // BEGINS USER PROMPTS
@@ -18,6 +22,11 @@ function initialPrompt() {
       message: "What is your Employee ID number?"
     },
     {
+      type: "input",
+      name: "email",
+      message: "What is your work email address?"
+    },
+    {
       type: "list",
       name: "role",
       message: "What is your role on this project?",
@@ -30,31 +39,10 @@ function initialPrompt() {
   ]).then(function(data) {
     var name = data.name;
     var id = data.id;
+    var email = data.email;
     var role = data.role;
-    var teammate = {
-      name: name,
-      id: id,
-      role: role,
-    };
-    switch (role) {
-      case "Manager":
-        managerPrompt(teammate);
-        break;
-      case "Engineer":
-        engineerPrompt(teammate);
-        break;
-      case "Intern":
-        internPrompt(teammate);
-        break;
-      default:
-        console.log("Something ain't workin'...");
-    }
-  })
-}
 
-// ADD'L PROMPTS BASED ON ROLE
-    // ADD'L PROMPT FOR MANAGERS
-    function managerPrompt(teammate) {
+    if (role === "Manager") {
       return inquirer.prompt([
         {
           type: "input",
@@ -63,13 +51,12 @@ function initialPrompt() {
         }
       ]).then(function(data) {
         var officeNum = data.office;
-        teammate["officeNum"] = officeNum;
+        var teammate = new Manager(name, id, email, role, officeNum);
         roster.push(teammate);
-        addAnother();
+        // console.log(roster);
+        addAnother()
       })
-    };
-    // ADD'L PROMPT FOR ENGINEERS
-    function engineerPrompt(teammate) {
+    } else if (role === "Engineer") {
       return inquirer.prompt([
         {
           type: "input",
@@ -78,26 +65,29 @@ function initialPrompt() {
         }
       ]).then(function(data) {
         var github = data.github;
-        teammate["github"] = github;
+        var teammate = new Engineer(name, id, email, role, github);
         roster.push(teammate);
-        addAnother();
+        // console.log(roster);
+        addAnother()
       })
-    };
-    // ADD'L PROMPT FOR INTERNS
-    function internPrompt(teammate) {
+    } else if (role === "Intern") {
       return inquirer.prompt([
         {
           type: "input",
           name: "school",
-          message: "Where do you go to school?"
+          message: "What shcool do you attend?"
         }
       ]).then(function(data) {
         var school = data.school;
-        teammate["school"] = school;
+        var teammate = new Intern(name, id, email, role, school);
         roster.push(teammate);
-        addAnother();
+        // console.log(roster);
+        addAnother()
       })
     };
+  });
+}
+
 
 // PROMPTS USER TO ADD ANOTHER TEAMMATE
 function addAnother() {
@@ -111,19 +101,19 @@ function addAnother() {
     var add = data.addanother;
     switch (add) {
     case true:
-        initialPrompt();
-        break;
+      initialPrompt();
+      break;
     case false:
-        console.log("All done! Lets see who's on your team...")
-        fs.writeFile("output/teamprofile.html", renderHTML(roster), function(err) {
-            if (err) {
-                throw err;
-            }
-            console.log("Success!")
-        })
-        break;
+      console.log("All done! Lets see who's on your team...")
+      fs.writeFile("output/teamprofile.html", renderHTML(roster), function(err) {
+        if (err) {
+          throw err;
+        }
+        console.log(roster)
+      })
+      break;
     default:
-        console.log("Something ain't workin'...");
+      console.log("Something ain't workin'...");
     }
   })
 }
@@ -135,15 +125,12 @@ function renderHTML(roster) {
         for (var i = 0; i < roster.length; i++) {
             switch (roster[i].role) {
                 case "Manager":
-                    // 
                     console.log(roster[i].name + " is a Manager");
                     break;
                 case "Engineer":
-                    // 
                     console.log(roster[i].name + " is an Engineer");
                     break;
                 case "Intern":
-                    // 
                     console.log(roster[i].name + " is an Intern");
                     break;
             }
@@ -152,7 +139,5 @@ function renderHTML(roster) {
     return 
     
 }
-
-
 
 initialPrompt();
